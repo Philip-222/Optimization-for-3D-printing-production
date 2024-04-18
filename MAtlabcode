@@ -1,0 +1,47 @@
+MATLAB CODE:
+% Define the costs, material requirements, and time requirements for each part
+costs = [650, 250, 250, 300, 280, 290, 320, 300, 350]; % Cost for each part
+materials = [100, 30, 45, 20, 5.6, 8.5, 35, 70, 45];   % Material required for each part in grams
+times = [6, 3, 4.5, 1.5, 1, 1, 2, 5, 3];               % Time required for each part in hours
+
+% Define the total available resources
+total_material = 345;  % Total available material in grams
+total_time = 27;       % Total available time in hours
+
+% Set up the optimization problem
+f = costs;    % Cost vector (objective function to minimize)
+A = [materials; times];  % Constraint coefficients matrix
+b = [total_material; total_time];  % Right-hand side of the inequality constraints
+
+% Define bounds for the decision variables (number of parts produced)
+lb = zeros(size(costs));  % Lower bounds (cannot produce negative number of parts)
+ub = [];  % Upper bounds are not defined (infinity by default)
+
+% Solve the linear programming problem
+[x, fval] = linprog(f, A, b, [], [], lb, ub);
+
+% Display the results
+disp('Optimal number of each part to produce:');
+disp(x);
+disp(['Total minimum cost: ', num2str(fval)]);
+
+
+
+
+MATLAB CODE FOR SENSITIVITY ANALYSIS:
+
+
+% Assuming we increase the cost of the first part by 5 PHP
+new_costs = costs;
+new_costs(1) = costs(1) + 5;  % Increase cost of the first part
+
+% Solve the linear programming problem with updated costs
+[x_new, fval_new] = linprog(new_costs, A, b, [], [], lb, ub);
+
+% Calculate the change in total cost
+cost_change = fval_new - fval;
+
+% Display the results of sensitivity analysis
+disp(['Change in total cost due to a 5 PHP increase in the cost of the first part: ', num2str(cost_change)]);
+
+
